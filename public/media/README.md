@@ -1,12 +1,13 @@
 # Media Directory
 
-This directory stores uploaded files used by the application.
+This directory stores public media files used by DevConnect.
+
+## Structure
 
 avatars/
-Default and user profile pictures.
-
 covers/
-Default and user cover images.
-
 uploads/
-Images attached to posts.
+
+Only the default avatar and cover images are versioned.
+
+User uploaded files are ignored by Git.
