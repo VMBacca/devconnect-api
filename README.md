@@ -1,7 +1,7 @@
 # DevConnect API
 
 <p align="center">
-  <img src="./public/media/README.md" alt="DevConnect Logo" width="180"/>
+  <img src="./docs/images/devconnect_logo.png" alt="DevConnect Logo" width="180"/>
 </p>
 
 > A modern social networking REST API built with Laravel, JWT Authentication, and MySQL.
