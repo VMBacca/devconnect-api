@@ -11,6 +11,7 @@ use DateTime;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\PostLike;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -77,8 +78,7 @@ class UserController extends Controller
         // PASSWORD
         if($password && $password_confirm){
             if($password === $password_confirm){
-                $hash = \password_hash($password, \PASSWORD_DEFAULT);
-                $user->password = $hash;
+                $user->password = Hash::make($password);
             }else{
                 $array['error'] = 'The passwords do not match.';
                 return $array;
@@ -104,7 +104,7 @@ class UserController extends Controller
             return ['error' => 'Unsupported file.'];
         }
 
-        $filename = md5(time() . rand(0, 9999)) . '.jpg';
+        $filename = md5(time() . rand(0, 9999)) . '.png';
         $destPath = public_path('/media/avatars');
 
         $manager = new ImageManager(new Driver());
@@ -139,7 +139,7 @@ class UserController extends Controller
             return ['error' => 'Unsupported file.'];
         }
 
-        $filename = md5(time() . rand(0, 9999)) . '.jpg';
+        $filename = md5(time() . rand(0, 9999)) . '.png';
         $destPath = public_path('/media/covers');
 
         $manager = new ImageManager(new Driver());
@@ -166,7 +166,7 @@ class UserController extends Controller
             empty($avatar) ||
             !file_exists(public_path('media/avatars/'.$avatar))
         ){
-            return url('media/avatars/default.jpg');
+            return url('media/avatars/avatar_default.png');
         }
 
         return url('media/avatars/'.$avatar);
@@ -186,8 +186,9 @@ class UserController extends Controller
             $info = $loggedUser;
         }
 
-        $info['avatar'] = url('media/avatars/'.$info['avatar']);
-        $info['cover'] = url('media/covers/'.$info['cover']);
+        $info['avatar'] = $this->getAvatarUrl($info->avatar);
+
+        $info['cover'] = $this->getCoverUrl($info->cover);
 
         $info['me'] = ($info['id'] == $loggedUser->id) ? true :false;
 
@@ -268,6 +269,18 @@ class UserController extends Controller
         return $array;
     }
 
+    private function getCoverUrl($cover)
+    {
+        if (
+            empty($cover) ||
+            !file_exists(public_path('media/covers/'.$cover))
+        ) {
+            return url('media/covers/cover_default.png');
+        }
+
+        return url('media/covers/'.$cover);
+    }
+
     public function follow($id){
         /** @var User $loggedUser */   
         $loggedUser = Auth::guard('api')->user();
@@ -296,7 +309,7 @@ class UserController extends Controller
             }
 
         }else{
-            return ['error' => 'Non-existent river'];
+            return ['error' => 'User not found.'];
         }
 
         return $array;
@@ -321,7 +334,7 @@ class UserController extends Controller
                 $array['followers'][] = [
                     'id' => $user->id,
                     'name' => $user->name,
-                    'avatar' => url('media/avatars/' .$user->avatar)
+                    'avatar' => $this->getAvatarUrl($user->avatar)
                 ];
             }
 

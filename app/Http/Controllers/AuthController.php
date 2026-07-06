@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -79,30 +80,56 @@ class AuthController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
         $birthdate = $request->input('birthdate');
+        $avatarStyle = $request->input('avatarStyle', 'generic');
 
-        if($name && $email && $password && $birthdate){
-            // Validating the birthdate
+        if($name && $email && $password && $birthdate){            // Validating the birthdate
             if(\strtotime($birthdate)=== false){
                 $array['error'] = 'Invalid birthdate.';
                 return $array;
             }
 
             // Verifying the existence of the email
-            $emailExists = User::where('email', $email)->count();
+            if(!User::where('email', $email)->exists()){
+                
+                $hashedPassword = Hash::make($password);
+                
+                switch ($avatarStyle) {
+                    case 'female':
+                        $avatars = [
+                            'avatar_female_default_1.png',
+                            'avatar_female_default_2.png',
+                            'avatar_female_default_3.png',
+                            'avatar_female_default_4.png'
+                        ];
+                        $avatar = $avatars[array_rand($avatars)];
+                        break;
 
-            if($emailExists === 0){
-                $hash = \password_hash($password, \PASSWORD_DEFAULT);
+                    case 'male':
+                        $avatars = [
+                            'avatar_male_default_1.png',
+                            'avatar_male_default_2.png',
+                            'avatar_male_default_3.png',
+                            'avatar_male_default_4.png'
+                        ];
+                        $avatar = $avatars[array_rand($avatars)];
+                        break;
+
+                    default:
+                        $avatar = 'avatar_default.png';
+                }
 
                 $newUser = new User();
                 $newUser->name = $name;
                 $newUser->email = $email;
-                $newUser->password = $hash;
+                $newUser->password = $hashedPassword;
                 $newUser->birthdate = $birthdate;
+                $newUser->avatar = $avatar;
+                $newUser->cover = 'cover_default.png';
                 $newUser->save();
 
                 $token = Auth::guard('api')->attempt([
-                    'email'=>$email,
-                    'password'=>$password,
+                    'email' => $email,
+                    'password' => $password, 
                 ]);
 
                 if(!$token){
