@@ -159,8 +159,9 @@ class FeedController extends Controller
 
             // Fill in user information
             $userInfo = User::find($postItem->id_user);
-            $userInfo['avatar'] = url('media/avatars/'.$userInfo->avatar);
-            $userInfo['cover'] = url('media/covers/'.$userInfo->cover);
+
+            $userInfo['avatar'] = $this->getAvatarUrl($userInfo->avatar);
+            $userInfo['cover'] = $this->getCoverUrl($userInfo->cover);
             $postList[$postKey]['user'] = $userInfo;
             if ($postItem->type == 'photo') {
             $postList[$postKey]['body'] = url('media/uploads/' . $postItem->body);
@@ -179,8 +180,9 @@ class FeedController extends Controller
             $comments = PostComment::where('id_post', $postItem->id)->get();
             foreach($comments as $commentKey => $comment){
                 $user = User::find($comment->id_user);
-                $user['avatar'] = url('media/avatars/'.$user->avatar);
-                $user['cover'] = url('media/covers/'.$user->cover);
+
+                $user['avatar'] = $this->getAvatarUrl($user->avatar);
+                $user['cover'] = $this->getCoverUrl($user->cover);
                 $comments[$commentKey]["user"] = $user;
             }
             $postList[$postKey]['comments'] = $comments;
@@ -199,7 +201,7 @@ class FeedController extends Controller
         }
 
         $page = intval($request->input('page'));
-        $perPage = 2;
+        $perPage = 12;
 
         // Get the user's photos, SORTED BY DATE.
         $postList = Post::where('id_user', $id)
@@ -223,4 +225,29 @@ class FeedController extends Controller
 
         return $array;
     }
+
+    private function getAvatarUrl($avatar)
+    {
+        if (
+            empty($avatar) ||
+            !file_exists(public_path('media/avatars/' . $avatar))
+        ) {
+            return url('media/avatars/avatar_default.png');
+        }
+
+        return url('media/avatars/' . $avatar);
+    }
+
+    private function getCoverUrl($cover)
+    {
+        if (
+            empty($cover) ||
+            !file_exists(public_path('media/covers/' . $cover))
+        ) {
+            return url('media/covers/cover_default.png');
+        }
+
+        return url('media/covers/' . $cover);
+    }
 }
+

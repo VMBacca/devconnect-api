@@ -12,6 +12,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\PostLike;
 use Illuminate\Support\Facades\Hash;
+use App\Models\PostComment;
 
 class UserController extends Controller
 {
@@ -221,7 +222,14 @@ class UserController extends Controller
 
         foreach($posts as $postKey => $post){
 
-            $posts[$postKey]['mine'] = true;
+            $user = User::find($post->id_user);
+
+            $user['avatar'] = $this->getAvatarUrl($user->avatar);
+            $user['cover'] = $this->getCoverUrl($user->cover);
+
+            $posts[$postKey]['user'] = $user;
+
+            $posts[$postKey]['mine'] = ($post->id_user == $loggedUser->id);
 
             if($post->type == 'photo'){
                 $posts[$postKey]['body'] =
@@ -231,9 +239,25 @@ class UserController extends Controller
             $posts[$postKey]['likeCount'] =
                 PostLike::where('id_post', $post->id)->count();
 
-            $posts[$postKey]['liked'] = false;
+            $isLiked = PostLike::where('id_post', $post->id)
+                ->where('id_user', $loggedUser->id)
+                ->count();
 
-            $posts[$postKey]['comments'] = [];
+            $posts[$postKey]['liked'] = ($isLiked > 0);
+
+            $comments = PostComment::where('id_post', $post->id)->get();
+
+            foreach ($comments as $commentKey => $comment) {
+
+                $commentUser = User::find($comment->id_user);
+
+                $commentUser['avatar'] = $this->getAvatarUrl($commentUser->avatar);
+                $commentUser['cover'] = $this->getCoverUrl($commentUser->cover);
+
+                $comments[$commentKey]['user'] = $commentUser;
+            }
+
+            $posts[$postKey]['comments'] = $comments;
         }
 
         $info['posts'] = $posts;
