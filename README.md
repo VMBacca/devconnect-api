@@ -10,23 +10,38 @@ RESTful API for the DevConnect social networking application, built with Laravel
 
 <p align="center">
 
-![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-8.x-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![REST API](https://img.shields.io/badge/REST-API-6DB33F?style=for-the-badge)
 
 </p>
 
+> REST API developed as the backend for the DevConnect social networking platform.
+
 ---
 
 # 📖 About the Project
 
-DevConnect API is the backend of the DevConnect social networking application.
+DevConnect API is a RESTful backend designed to power a modern social networking application, providing secure authentication, user management, media uploads and social interactions through a clean JSON API.
 
-It exposes a RESTful API responsible for user authentication, profile management, social interactions, media uploads and feed management.
+The application communicates with the DevConnect Frontend through JWT-secured endpoints, following a clear separation between frontend presentation and backend business logic.
 
 The API communicates with the DevConnect Frontend through JSON endpoints secured using JWT Authentication, following a clear separation between frontend presentation and backend business logic.
+
+---
+
+# ✨ Highlights
+
+- JWT Authentication
+- RESTful API
+- Media Uploads
+- Social Feed
+- User Profiles
+- Search System
+- MySQL Database
+- Clean REST Architecture
 
 ---
 
@@ -71,9 +86,9 @@ The API communicates with the DevConnect Frontend through JSON endpoints secured
 
 ### Backend
 
-- PHP 8
-- Laravel
-- JWT Authentication
+- PHP 8.5
+- Laravel 13
+- JWT Authentication (tymon/jwt-auth)
 - MySQL
 - RESTful API
 
@@ -82,6 +97,12 @@ The API communicates with the DevConnect Frontend through JSON endpoints secured
 - Composer
 - Artisan
 - XAMPP
+
+---
+
+## Architecture
+
+The project follows a layered architecture, separating authentication, business rules, media handling and API endpoints through Laravel controllers, models and services.
 
 ---
 
@@ -107,6 +128,14 @@ README.md
 
 ---
 
+# Requirements
+
+- PHP 8.5+
+- Composer 2+
+- MySQL
+
+---
+
 # 🚀 Getting Started
 
 Clone the repository
@@ -121,11 +150,15 @@ Install dependencies
 composer install
 ```
 
+> **Note:** This project requires **PHP 8.5+**.
+
 Create the environment file
 
 ```bash
 cp .env.example .env
 ```
+
+Configure your database credentials in the `.env` file.
 
 Generate the application key
 
@@ -139,18 +172,28 @@ Generate the JWT secret
 php artisan jwt:secret
 ```
 
-Configure your database in the `.env` file.
-
 Run the migrations
 
 ```bash
 php artisan migrate
 ```
 
+Create the storage symbolic link
+
+```bash
+php artisan storage:link
+```
+
 Start the development server
 
 ```bash
 php artisan serve
+```
+
+If you experience compatibility issues with the Laravel development server on Windows environments, you can alternatively start the application using the built-in PHP server:
+
+```bash
+php -S 127.0.0.1:8000 -t public
 ```
 
 The API will be available at:
@@ -179,10 +222,9 @@ http://127.0.0.1:8000
 
 # 🔗 Related Project
 
-### DevConnect Frontend
+➡️ **DevConnect Frontend**
 
-Frontend application for this API:
-
+Repository:
 https://github.com/VMBacca/devconnect-frontend
 
 ---
@@ -215,6 +257,7 @@ Planned improvements for future versions:
 
 ### Infrastructure
 
+- Docker Compose
 - Docker support
 - CI/CD pipeline
 - Redis cache
@@ -226,7 +269,7 @@ Planned improvements for future versions:
 
 **Vinicius Marcondes Bacca**
 
-Backend Developer (.NET) | Laravel | QA Automation
+Backend Developer (.NET) | REST APIs | Laravel | QA Automation
 
 - GitHub: https://github.com/VMBacca
 - LinkedIn: https://www.linkedin.com/in/viniciusmarcondesbacca/
