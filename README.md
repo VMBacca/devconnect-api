@@ -26,8 +26,6 @@ RESTful API for the DevConnect social networking application, built with Laravel
 
 DevConnect API is a RESTful backend designed to power a modern social networking application, providing secure authentication, user management, media uploads and social interactions through a clean JSON API.
 
-The application communicates with the DevConnect Frontend through JWT-secured endpoints, following a clear separation between frontend presentation and backend business logic.
-
 The API communicates with the DevConnect Frontend through JSON endpoints secured using JWT Authentication, following a clear separation between frontend presentation and backend business logic.
 
 ---
@@ -88,7 +86,7 @@ The API communicates with the DevConnect Frontend through JSON endpoints secured
 
 - PHP 8.5
 - Laravel 13
-- JWT Authentication (tymon/jwt-auth)
+- JWT Authentication (PHP-Open-Source JWT Package)
 - MySQL
 - RESTful API
 
